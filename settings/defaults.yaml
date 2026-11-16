@@ -1,0 +1,237 @@
+# Matriarch default settings.
+#
+# This file ships with the plugin and is read-only. Do not edit it here: an
+# update replaces it. Override any key in one of the two layers below; see
+# core/settings.md for how they combine.
+#
+#   user:    ~/.matriarch/config.yaml  (in chat apps: a "Matriarch settings"
+#            YAML block in the project or custom instructions)
+#   project: the "Settings" section of the project hub in memory
+#
+# Every key belongs to one scope. A user file may set only `user`, `memory`,
+# `models`, `schedule` and `projects` keys; the project hub may set only `project` keys.
+
+user:
+  # Language for replies to you. Code, specs, commits and memory rows stay in
+  # English unless the project says otherwise.
+  language: en
+  # How much to explain: brief | normal | teach (teach: ask your answer first on
+  # important choices, explain why, end reviews with "the thing to learn").
+  explain: normal
+
+models:
+  # Model tiers per tool. Use the names your tool accepts.
+  tiers:
+    claude-code: {strong: opus, standard: sonnet, fast: haiku}
+    # Empty: use the tool's default model for that tier.
+    codex: {strong: "", standard: "", fast: ""}
+  # Model names from strongest to weakest. A tier's model matches a name when
+  # it contains it (claude-opus-4 matches opus). In every tool, strong must be at
+  # least as strong as standard, and standard at least as strong as fast; a model
+  # that matches no name here is not checked. Add your other tools' models here.
+  order: [opus, sonnet, haiku]
+  # Tier for each session (the chat you open). Sessions cannot switch their own
+  # model, so hand-off commands carry it.
+  sessions:
+    plan: strong
+    check: strong
+    fix: strong
+    discuss: strong
+    review: strong
+    exec: standard
+    status: standard
+    docs: standard
+    tidy: standard
+    setup: standard
+    doctor: fast
+  # Advisor (Claude Code: /advisor, --advisor, advisorModel): a standard session
+  # consults a stronger model at hard points.
+  advisor:
+    enabled: true
+    tier: strong
+    for: [exec, status, docs, tidy, setup]
+  # Tier for each goldfish lens. Lenses that can stop work run on strong.
+  lenses:
+    default: standard
+    strong: [implementation-readiness, business, security, decision-fit, spec-compliance]
+    fast: [comprehension]
+  # No lens that can stop work runs below this tier (small models approve flawed
+  # plans).
+  floor_for_strong_lenses: strong
+
+schedule:
+  # When the weekly tidy job runs (matriarch:tidy scheduled).
+  tidy:
+    # before_reset: some hours before your weekly usage limit resets, to use what
+    #               is left of the week's allowance.
+    # weekly:       a fixed day and time.
+    # off:          no scheduled run.
+    when: before_reset
+    # Your weekly usage reset, local time, as "<Day> HH:MM" (see your plan's
+    # usage page). Needed for before_reset.
+    reset: ""
+    hours_before: 6
+    # Used when `when` is weekly.
+    weekly: "Fri 18:00"
+    # IANA time zone, for example Europe/Berlin. Empty: the machine's.
+    timezone: ""
+
+# Per-project overrides of your personal settings (user, memory, models,
+# schedule). Each entry says how to recognize the project and changes only what
+# differs, for example a work project whose memory must stay on this machine:
+#
+# projects:
+#   Billing:
+#     match:
+#       path: [~/work/billing]            # folders (and everything under them)
+#       repo: ["*/billing-*"]             # git remotes, as host/owner/name or owner/name
+#     memory:
+#       central:  {backend: files, path: ~/work/billing-memory}
+#       personal: {backend: files, path: ~/work/notes}
+#   SideApp:
+#     match: {repo: ["myname/side-app*"]}
+projects: {}
+
+memory:
+  # Central memory: shared by everyone on a project.
+  central:
+    # notion | files
+    backend: notion
+    # notion: title of the registry database that lists your projects.
+    registry: "Matriarch · Projects"
+    # files: the folder that holds the registry and the projects.
+    path: ""
+  # Personal memory: only you read it.
+  personal:
+    # notion | files | none (none: personal items go to the central memory)
+    backend: notion
+    # notion: title of your private page that holds your Personal database,
+    # and its URL (written by setup; sessions open it by URL only).
+    page: "Matriarch · Personal"
+    url: ""
+    # files: the folder for your personal notes.
+    path: ""
+
+project:
+  ids:
+    # standard: the shapes in core/ids.md. legacy: an adopted hub keeps its own
+    # pattern, described in the hub Rules.
+    pattern: standard
+    # Area codes, 2-4 capital letters, one per module or part of the product.
+    # Set at setup, for example [ORD, PAY, AUTH].
+    areas: []
+    # What a task mostly changes.
+    kinds: [API, DB, UI, JOB, INT, SEC, OPS, DOC, FIX]
+    # Sub-task steps, in build order.
+    steps: [contract, data, logic, wiring, edge, tests, docs, fix]
+
+  confidentiality:
+    # normal | confidential (client code, unreleased designs, regulated data).
+    level: normal
+    # Review packets or goldfish on another provider or model family, outside
+    # the tool you are in: allow | ask (owner approves each one) | deny.
+    external_review: allow
+    # true:  memory may hold code quotes, diffs and full review reports.
+    # false: memory holds summaries with file:line references; full reports and
+    #        code stay in local files.
+    store_code_in_memory: true
+
+  tests:
+    # Tests are written and approved before the code, then locked.
+    first: true
+    # How approved tests are locked:
+    #   commit:   the approved tests are committed alone (by plan, or by you
+    #             when commits.by is owner); `git diff` against that commit
+    #             proves they did not change.
+    #   checksum: sha256 of each test file, stored on the task in memory; use
+    #             it when tests are kept out of git.
+    lock: commit
+
+  commits:
+    # Who commits: plan (after you approve each sub-task) | owner
+    by: plan
+    # true:  one code commit per approved sub-task (plus one test commit per
+    #        lock when tests.lock is commit).
+    # false: no commits during the task; one commit at the end, before the PR.
+    per_subtask: true
+    # Add AI attribution lines (Co-Authored-By) to commit messages: true | false
+    attribution: true
+    # true:  messages are written for the team: what changed and why, no task
+    #        IDs, tool links or review details.
+    # false: messages may name the task and sub-task IDs.
+    team_readable: true
+    # true:  you approve each message before the commit.
+    # false: plan commits with its own message and shows it after.
+    owner_approves_message: true
+
+  # Who may merge a pull request:
+  #   reviewer:          a reviewer other than the author merges
+  #   self-after-review: a solo owner may merge after a `review` session
+  merge: reviewer
+  # How the pull request is merged: merge-commit | rebase | squash.
+  # Squash loses the per-sub-task commits and the test-lock commits.
+  merge_method: merge-commit
+
+  tidy:
+    # What a scheduled (unattended) tidy run may change by itself. Everything
+    # else is reported for the owner.
+    #   archive_worklog: roll Work log rows older than archive_after_days into one
+    #                    "Week of <date>" summary row and mark them Archived.
+    #   mark_stale_sessions: set Work log rows In progress for more than
+    #                    stale_session_days to Stopped, with a note.
+    safe_fixes: [archive_worklog]
+    archive_after_days: 30
+    stale_session_days: 2
+    stale_question_days: 14
+
+  review:
+    # Default review mode for a task: quick | standard | critical. plan proposes
+    # a mode per task by its risk; the owner confirms. The mode's values below
+    # replace the standard ones for that task.
+    mode: standard
+    modes:
+      quick:
+        clean_rounds_needed: {spec: 1, prompt: 1, tests: 1, code: 1}
+        cross_model: false
+        panels:
+          spec: [comprehension, decision-fit, implementation-readiness]
+          prompt: [implementation-readiness]
+          tests: [test-evidence]
+          subtask: [spec-compliance, test-evidence]
+          task: [spec-compliance, security]
+      critical:
+        clean_rounds_needed: {spec: 2, prompt: 1, tests: 1, code: 2}
+        cross_model: true
+        # Add the sensitive panel to every subtask and task review.
+        always_sensitive: true
+    # Rounds that must pass the gate in a row (core/gate.md: PASS or
+    # PASS_WITH_ACTIONS on a changed target).
+    clean_rounds_needed:
+      spec: 2       # two clean rounds in a row
+      prompt: 1
+      tests: 1
+      code: 1
+    # After this many rounds without the needed clean rounds, the owner decides:
+    # one more round, waive (core/gate.md), or back to the design.
+    max_rounds: 3
+    # After this many failed fixes of the same failure, stop and go back to the
+    # design with the owner.
+    max_fix_attempts: 3
+    # Run at least one lens on another model when one is reachable.
+    cross_model: true
+
+    # Goldfish lenses per review point. Names are files in personas/.
+    panels:
+      spec:        [comprehension, zoom-out, business, decision-fit, design-critic, implementation-readiness]
+      prompt:      [implementation-readiness, codebase-fit]
+      tests:       [test-evidence, business, spec-compliance]
+      subtask:     [spec-compliance, code-quality, business, test-evidence]
+      # Added to `subtask` and `task` when the diff touches auth, user or tenant
+      # data, money, migrations, concurrency or external calls.
+      sensitive:   [correctness, security]
+      task:        [zoom-out, business, spec-compliance, decision-fit, security, test-evidence]
+      pr:          [spec-compliance, code-quality, correctness, security, test-evidence]
+      doc:         [comprehension, zoom-out, business, decision-fit, design-critic]
+      area_guide:  [comprehension]
+      decision:    [premortem]
+      idea:        [zoom-out, design-critic, decision-fit]

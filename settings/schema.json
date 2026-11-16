@@ -1,0 +1,952 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Matriarch settings",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "lenses": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "comprehension",
+          "zoom-out",
+          "business",
+          "decision-fit",
+          "design-critic",
+          "implementation-readiness",
+          "codebase-fit",
+          "code-quality",
+          "spec-compliance",
+          "test-evidence",
+          "correctness",
+          "security",
+          "premortem"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "tier": {
+      "enum": [
+        "strong",
+        "standard",
+        "fast"
+      ]
+    },
+    "tiernames": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "strong": {
+          "type": "string"
+        },
+        "standard": {
+          "type": "string"
+        },
+        "fast": {
+          "type": "string"
+        }
+      }
+    },
+    "project_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "match": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "repo": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "user": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "language": {
+              "type": "string",
+              "minLength": 2
+            },
+            "explain": {
+              "enum": [
+                "brief",
+                "normal",
+                "teach"
+              ]
+            }
+          }
+        },
+        "memory": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "central": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "backend": {
+                  "enum": [
+                    "notion",
+                    "files"
+                  ]
+                },
+                "registry": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                }
+              },
+              "if": {
+                "properties": {
+                  "backend": {
+                    "const": "files"
+                  }
+                },
+                "required": [
+                  "backend"
+                ]
+              },
+              "then": {
+                "required": [
+                  "path"
+                ],
+                "properties": {
+                  "path": {
+                    "minLength": 1
+                  }
+                }
+              }
+            },
+            "personal": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "backend": {
+                  "enum": [
+                    "notion",
+                    "files",
+                    "none"
+                  ]
+                },
+                "page": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "if": {
+                "properties": {
+                  "backend": {
+                    "const": "files"
+                  }
+                },
+                "required": [
+                  "backend"
+                ]
+              },
+              "then": {
+                "required": [
+                  "path"
+                ],
+                "properties": {
+                  "path": {
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "models": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tiers": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/$defs/tiernames"
+              }
+            },
+            "sessions": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "plan": {
+                  "$ref": "#/$defs/tier"
+                },
+                "check": {
+                  "$ref": "#/$defs/tier"
+                },
+                "fix": {
+                  "$ref": "#/$defs/tier"
+                },
+                "discuss": {
+                  "$ref": "#/$defs/tier"
+                },
+                "review": {
+                  "$ref": "#/$defs/tier"
+                },
+                "exec": {
+                  "$ref": "#/$defs/tier"
+                },
+                "status": {
+                  "$ref": "#/$defs/tier"
+                },
+                "docs": {
+                  "$ref": "#/$defs/tier"
+                },
+                "tidy": {
+                  "$ref": "#/$defs/tier"
+                },
+                "setup": {
+                  "$ref": "#/$defs/tier"
+                },
+                "doctor": {
+                  "$ref": "#/$defs/tier"
+                }
+              }
+            },
+            "advisor": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "tier": {
+                  "$ref": "#/$defs/tier"
+                },
+                "for": {
+                  "type": "array",
+                  "items": {
+                    "enum": [
+                      "plan",
+                      "check",
+                      "fix",
+                      "discuss",
+                      "review",
+                      "exec",
+                      "status",
+                      "docs",
+                      "tidy",
+                      "setup",
+                      "doctor"
+                    ]
+                  },
+                  "uniqueItems": true
+                }
+              }
+            },
+            "lenses": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "default": {
+                  "$ref": "#/$defs/tier"
+                },
+                "strong": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "fast": {
+                  "$ref": "#/$defs/lenses"
+                }
+              }
+            },
+            "floor_for_strong_lenses": {
+              "$ref": "#/$defs/tier"
+            }
+          }
+        },
+        "schedule": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tidy": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "when": {
+                  "enum": [
+                    "before_reset",
+                    "weekly",
+                    "off"
+                  ]
+                },
+                "reset": {
+                  "type": "string",
+                  "pattern": "^$|^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) ([01][0-9]|2[0-3]):[0-5][0-9]$"
+                },
+                "hours_before": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 48
+                },
+                "weekly": {
+                  "type": "string",
+                  "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) ([01][0-9]|2[0-3]):[0-5][0-9]$"
+                },
+                "timezone": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "user": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "language": {
+          "type": "string",
+          "minLength": 2
+        },
+        "explain": {
+          "enum": [
+            "brief",
+            "normal",
+            "teach"
+          ]
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "central": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "backend": {
+              "enum": [
+                "notion",
+                "files"
+              ]
+            },
+            "registry": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            }
+          },
+          "if": {
+            "properties": {
+              "backend": {
+                "const": "files"
+              }
+            },
+            "required": [
+              "backend"
+            ]
+          },
+          "then": {
+            "required": [
+              "path"
+            ],
+            "properties": {
+              "path": {
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "personal": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "backend": {
+              "enum": [
+                "notion",
+                "files",
+                "none"
+              ]
+            },
+            "page": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "if": {
+            "properties": {
+              "backend": {
+                "const": "files"
+              }
+            },
+            "required": [
+              "backend"
+            ]
+          },
+          "then": {
+            "required": [
+              "path"
+            ],
+            "properties": {
+              "path": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ids": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pattern": {
+              "enum": [
+                "standard",
+                "legacy"
+              ]
+            },
+            "areas": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]{2,4}$"
+              },
+              "uniqueItems": true
+            },
+            "kinds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]{2,5}$"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z]+$"
+              },
+              "uniqueItems": true,
+              "minItems": 1
+            }
+          }
+        },
+        "tests": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "first": {
+              "type": "boolean"
+            },
+            "lock": {
+              "enum": [
+                "commit",
+                "checksum"
+              ]
+            }
+          }
+        },
+        "commits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "by": {
+              "enum": [
+                "plan",
+                "owner"
+              ]
+            },
+            "per_subtask": {
+              "type": "boolean"
+            },
+            "attribution": {
+              "type": "boolean"
+            },
+            "team_readable": {
+              "type": "boolean"
+            },
+            "owner_approves_message": {
+              "type": "boolean"
+            }
+          }
+        },
+        "merge": {
+          "enum": [
+            "reviewer",
+            "self-after-review"
+          ]
+        },
+        "merge_method": {
+          "enum": [
+            "merge-commit",
+            "rebase",
+            "squash"
+          ]
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "clean_rounds_needed": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "spec": {
+                  "$ref": "#/$defs/count"
+                },
+                "prompt": {
+                  "$ref": "#/$defs/count"
+                },
+                "tests": {
+                  "$ref": "#/$defs/count"
+                },
+                "code": {
+                  "$ref": "#/$defs/count"
+                }
+              }
+            },
+            "max_rounds": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "max_fix_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            },
+            "cross_model": {
+              "type": "boolean"
+            },
+            "panels": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "spec": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "prompt": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "tests": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "subtask": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "sensitive": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "task": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "pr": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "doc": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "area_guide": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "decision": {
+                  "$ref": "#/$defs/lenses"
+                },
+                "idea": {
+                  "$ref": "#/$defs/lenses"
+                }
+              }
+            },
+            "mode": {
+              "enum": [
+                "quick",
+                "standard",
+                "critical"
+              ]
+            },
+            "modes": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "quick": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "clean_rounds_needed": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "spec": {
+                          "$ref": "#/$defs/count"
+                        },
+                        "prompt": {
+                          "$ref": "#/$defs/count"
+                        },
+                        "tests": {
+                          "$ref": "#/$defs/count"
+                        },
+                        "code": {
+                          "$ref": "#/$defs/count"
+                        }
+                      }
+                    },
+                    "cross_model": {
+                      "type": "boolean"
+                    },
+                    "always_sensitive": {
+                      "type": "boolean"
+                    },
+                    "panels": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "spec": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "prompt": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "tests": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "subtask": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "sensitive": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "task": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "pr": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "doc": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "area_guide": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "decision": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "idea": {
+                          "$ref": "#/$defs/lenses"
+                        }
+                      }
+                    }
+                  }
+                },
+                "critical": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "clean_rounds_needed": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "spec": {
+                          "$ref": "#/$defs/count"
+                        },
+                        "prompt": {
+                          "$ref": "#/$defs/count"
+                        },
+                        "tests": {
+                          "$ref": "#/$defs/count"
+                        },
+                        "code": {
+                          "$ref": "#/$defs/count"
+                        }
+                      }
+                    },
+                    "cross_model": {
+                      "type": "boolean"
+                    },
+                    "always_sensitive": {
+                      "type": "boolean"
+                    },
+                    "panels": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "spec": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "prompt": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "tests": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "subtask": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "sensitive": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "task": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "pr": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "doc": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "area_guide": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "decision": {
+                          "$ref": "#/$defs/lenses"
+                        },
+                        "idea": {
+                          "$ref": "#/$defs/lenses"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "confidentiality": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "level": {
+              "enum": [
+                "normal",
+                "confidential"
+              ]
+            },
+            "external_review": {
+              "enum": [
+                "allow",
+                "ask",
+                "deny"
+              ]
+            },
+            "store_code_in_memory": {
+              "type": "boolean"
+            }
+          }
+        },
+        "tidy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "safe_fixes": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "archive_worklog",
+                  "mark_stale_sessions"
+                ]
+              },
+              "uniqueItems": true
+            },
+            "archive_after_days": {
+              "type": "integer",
+              "minimum": 7,
+              "maximum": 365
+            },
+            "stale_session_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30
+            },
+            "stale_question_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90
+            }
+          }
+        }
+      }
+    },
+    "models": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tiers": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/tiernames"
+          }
+        },
+        "order": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "description": "Model names from strongest to weakest."
+        },
+        "sessions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "plan": {
+              "$ref": "#/$defs/tier"
+            },
+            "check": {
+              "$ref": "#/$defs/tier"
+            },
+            "fix": {
+              "$ref": "#/$defs/tier"
+            },
+            "discuss": {
+              "$ref": "#/$defs/tier"
+            },
+            "review": {
+              "$ref": "#/$defs/tier"
+            },
+            "exec": {
+              "$ref": "#/$defs/tier"
+            },
+            "status": {
+              "$ref": "#/$defs/tier"
+            },
+            "docs": {
+              "$ref": "#/$defs/tier"
+            },
+            "tidy": {
+              "$ref": "#/$defs/tier"
+            },
+            "setup": {
+              "$ref": "#/$defs/tier"
+            },
+            "doctor": {
+              "$ref": "#/$defs/tier"
+            }
+          }
+        },
+        "advisor": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "tier": {
+              "$ref": "#/$defs/tier"
+            },
+            "for": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "plan",
+                  "check",
+                  "fix",
+                  "discuss",
+                  "review",
+                  "exec",
+                  "status",
+                  "docs",
+                  "tidy",
+                  "setup",
+                  "doctor"
+                ]
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "lenses": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "default": {
+              "$ref": "#/$defs/tier"
+            },
+            "strong": {
+              "$ref": "#/$defs/lenses"
+            },
+            "fast": {
+              "$ref": "#/$defs/lenses"
+            }
+          }
+        },
+        "floor_for_strong_lenses": {
+          "$ref": "#/$defs/tier"
+        }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tidy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "when": {
+              "enum": [
+                "before_reset",
+                "weekly",
+                "off"
+              ]
+            },
+            "reset": {
+              "type": "string",
+              "pattern": "^$|^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) ([01][0-9]|2[0-3]):[0-5][0-9]$"
+            },
+            "hours_before": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 48
+            },
+            "weekly": {
+              "type": "string",
+              "pattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) ([01][0-9]|2[0-3]):[0-5][0-9]$"
+            },
+            "timezone": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "projects": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/project_override"
+      }
+    }
+  }
+}

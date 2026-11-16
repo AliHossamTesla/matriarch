@@ -1,0 +1,13 @@
+{
+  "name": "matriarch",
+  "owner": {
+    "name": "Ali Hossam"
+  },
+  "plugins": [
+    {
+      "name": "matriarch",
+      "source": "./",
+      "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares."
+    }
+  ]
+}

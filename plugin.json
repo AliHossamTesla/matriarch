@@ -1,0 +1,12 @@
+{
+  "name": "matriarch",
+  "displayName": "Matriarch",
+  "version": "0.1.0",
+  "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares.",
+  "author": {
+    "name": "Ali Hossam"
+  },
+  "repository": "https://github.com/AliHossamTesla/Matriarch",
+  "license": "Apache-2.0",
+  "keywords": ["elephant-goldfish", "spec-driven-development", "design-review", "notion", "memory"]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "matriarch",
+  "interface": {
+    "displayName": "Matriarch"
+  },
+  "plugins": [
+    {
+      "name": "matriarch",
+      "source": "./",
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

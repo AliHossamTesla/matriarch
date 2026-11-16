@@ -1,0 +1,14 @@
+Matriarch
+Copyright 2026 Ali Hossam
+
+This product includes material adapted from the Elephant-Goldfish Model
+(https://github.com/google/elephant-goldfish-model), Copyright 2026 Google LLC,
+licensed under the Apache License, Version 2.0. Adapted files carry a comment
+naming the source file, the upstream commit (72d06f5) and what was changed:
+personas/_mandates.md, personas/zoom-out.md, personas/comprehension.md,
+personas/design-critic.md, personas/implementation-readiness.md,
+personas/codebase-fit.md, personas/synthesizer.md, standards/feature-spec.md,
+standards/zoom-out.md, standards/implementation-readiness.md,
+skills/mx-review/SKILL.md, skills/mx-resolve/SKILL.md,
+skills/mx-drift/SKILL.md, scripts/build.py (manifest formats).
+Matriarch is not affiliated with or endorsed by Google.

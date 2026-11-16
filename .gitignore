@@ -1,0 +1,7 @@
+dist/
+__pycache__/
+.pytest_cache/
+.matriarch/
+tests/forbidden-terms.local.txt
+matriarch.egg-info/
+*.egg-info/

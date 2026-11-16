@@ -1,0 +1,35 @@
+{
+  "name": "matriarch",
+  "displayName": "Matriarch",
+  "version": "0.1.0",
+  "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares.",
+  "author": {
+    "name": "Ali Hossam"
+  },
+  "repository": "https://github.com/AliHossamTesla/Matriarch",
+  "license": "Apache-2.0",
+  "keywords": [
+    "elephant-goldfish",
+    "spec-driven-development",
+    "design-review",
+    "notion",
+    "memory"
+  ],
+  "agents": [
+    "./.claude-plugin/agents/business.md",
+    "./.claude-plugin/agents/code-quality.md",
+    "./.claude-plugin/agents/codebase-fit.md",
+    "./.claude-plugin/agents/comprehension.md",
+    "./.claude-plugin/agents/correctness.md",
+    "./.claude-plugin/agents/decision-fit.md",
+    "./.claude-plugin/agents/design-critic.md",
+    "./.claude-plugin/agents/implementation-readiness.md",
+    "./.claude-plugin/agents/premortem.md",
+    "./.claude-plugin/agents/security.md",
+    "./.claude-plugin/agents/spec-compliance.md",
+    "./.claude-plugin/agents/synthesizer.md",
+    "./.claude-plugin/agents/test-evidence.md",
+    "./.claude-plugin/agents/zoom-out.md"
+  ],
+  "mcpServers": "./.mcp.json"
+}

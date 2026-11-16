@@ -1,0 +1,29 @@
+{
+  "name": "matriarch",
+  "version": "0.1.0",
+  "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares.",
+  "author": {
+    "name": "Ali Hossam"
+  },
+  "repository": "https://github.com/AliHossamTesla/Matriarch",
+  "license": "Apache-2.0",
+  "skills": "./skills/",
+  "requires_local_executor": true,
+  "interface": {
+    "displayName": "Matriarch",
+    "shortDescription": "Elephant-Goldfish with Notion memory",
+    "longDescription": "Plan, build and review work with sessions that share one project memory in Notion. Fresh goldfish reviewers check specs, plans and pull requests without the earlier conversation. Needs the Notion connector.",
+    "developerName": "Ali Hossam",
+    "category": "Productivity",
+    "capabilities": [
+      "Keep project memory",
+      "Review designs and PRs",
+      "Record decisions"
+    ],
+    "defaultPrompt": [
+      "matriarch:status",
+      "matriarch:plan <task ID or idea>",
+      "matriarch:discuss <topic>"
+    ]
+  }
+}
