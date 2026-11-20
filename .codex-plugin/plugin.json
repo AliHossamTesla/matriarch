@@ -1,6 +1,6 @@
 {
   "name": "matriarch",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares.",
   "author": {
     "name": "Ali Hossam"

@@ -264,12 +264,11 @@ def mode_views(s):
 
 
 def _model_rank(order, name):
-    """Position of a model in models.order (0 = strongest), or None if unknown."""
+    """Position of a model in models.order (0 = strongest), or None if unknown.
+    The longest matching name wins, so gpt-5-mini is not read as gpt-5."""
     name = (name or "").lower()
-    for i, known in enumerate(order):
-        if known.lower() in name:
-            return i
-    return None
+    hits = [(len(known), i) for i, known in enumerate(order) if known.lower() in name]
+    return max(hits)[1] if hits else None
 
 
 def _tiers_in_order(s):

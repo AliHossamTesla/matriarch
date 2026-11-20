@@ -10,7 +10,7 @@ Matriarch is a plugin for AI coding and chat assistants. It builds on Google's
 check the result. Matriarch adds what EGM does not have: **a project memory that
 outlives every chat**, and **review gates that code can check**.
 
-> **Status: v0.1, pre-beta.** The method ran by hand on real projects before
+> **Status: v0.2, pre-beta.** The method ran by hand on real projects before
 > this plugin existed; the plugin itself has not yet been run end to end on a
 > real project. See [Guarantees and limits](#guarantees-and-limits).
 

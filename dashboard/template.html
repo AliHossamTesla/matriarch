@@ -273,9 +273,11 @@ function modeViews(s) {
   return views;
 }
 function modelRank(order, name) {
+  // The longest matching name wins, so gpt-5-mini is not read as gpt-5.
   name = (name || "").toLowerCase();
-  for (let i = 0; i < order.length; i++) if (name.includes(String(order[i]).toLowerCase())) return i;
-  return null;
+  let best = null, len = -1;
+  order.forEach((k, i) => { const s = String(k).toLowerCase(); if (name.includes(s) && s.length > len) { best = i; len = s.length; } });
+  return best;
 }
 function tiersInOrder(s) {
   const order = s.models.order || [];
@@ -388,7 +390,12 @@ function field(root, path, label) {
   const left = document.createElement("div");
   const isChanged = base !== undefined && !same(base, value);
   left.innerHTML = `<label>${esc(label)} <span class="src">${isChanged ? (root === state.project ? "hub" : "you") : "default"}</span></label><div class="key">${esc(path.join("."))}</div>`;
-  const right = document.createElement("div"); right.appendChild(control(root, path, s, value));
+  const right = document.createElement("div"); const ctl = control(root, path, s, value);
+  const id = "f-" + Math.random().toString(36).slice(2, 9);
+  if (/^(INPUT|SELECT|TEXTAREA)$/.test(ctl.tagName)) { ctl.id = id; left.querySelector("label").htmlFor = id; }
+  else if (!ctl.getAttribute("aria-label")) ctl.setAttribute("aria-label", path.join("."));
+  if (ctl.classList.contains("chips")) ctl.setAttribute("role", "group");
+  right.appendChild(ctl);
   const d = doc(path); if (d) { const p = document.createElement("div"); p.className = "doc"; p.textContent = d; right.appendChild(p); }
   wrap.append(left, right); return wrap;
 }
@@ -447,7 +454,7 @@ const TREES = {
   "memory.personal": `<div class="tree" aria-label="What setup creates for your personal memory"><div class="h">What setup creates</div>
     <div class="n"><i class="pr"></i><b>the page titled as <code>page</code> below</b><small>private, never shared</small></div>
     <div class="l3" style="padding-left:16px">Personal database: notes, study, drafts, lessons</div>
-    <div class="muted" style="font-size:12px;margin-top:4px">Setup writes the page's link to <code>url</code>. Sessions open it by link only, so nobody else's search finds it.</div></div>`,
+    <div class="muted" style="font-size:12px;margin-top:4px">Setup writes the page's link to <code>url</code>. It stays private to you; sessions open it by its link.</div></div>`,
 };
 function tierCards(fs, root, path) {
   // models.tiers.<tool>: one card per tier with the known models as chips.
@@ -637,13 +644,13 @@ function renderReset(slot) {
   // to the plugin defaults. It asks once before doing it.
   if (!resetArmed) {
     slot.innerHTML = `<button class="small" id="reset-all"><svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4M2.5 2.5v3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Reset to defaults</button>`;
-    slot.querySelector("#reset-all").onclick = () => { resetArmed = true; renderReset(slot); };
+    slot.querySelector("#reset-all").onclick = () => { resetArmed = true; renderReset(slot); slot.querySelector("#reset-no").focus(); };
     if (resetDone) { slot.insertAdjacentHTML("afterbegin", `<span class="ok-t" role="status" style="margin-right:10px;font-size:13px">Back to the defaults.</span>`); resetDone = false; }
     return;
   }
   slot.innerHTML = `<div class="confirm" role="alertdialog" aria-label="Reset to defaults"><span>Reset every setting on every tab?</span><button class="small danger" id="reset-yes">Reset</button><button class="small" id="reset-no">Keep</button></div>`;
-  slot.querySelector("#reset-yes").onclick = () => { resetArmed = false; state = fresh(); resetDone = true; changed(); };
-  slot.querySelector("#reset-no").onclick = () => { resetArmed = false; renderReset(slot); };
+  slot.querySelector("#reset-yes").onclick = () => { resetArmed = false; state = fresh(); resetDone = true; changed(); const b = document.getElementById("reset-all"); if (b) b.focus(); };
+  slot.querySelector("#reset-no").onclick = () => { resetArmed = false; renderReset(slot); slot.querySelector("#reset-all").focus(); };
 }
 
 // ------------------------------------------------------------------ frame
