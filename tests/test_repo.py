@@ -519,3 +519,13 @@ def test_model_tiers_must_keep_their_order(tmp_path):
     f.write_text("models:\n  order: [my-big, my-small]\n  tiers:\n    codex: {strong: my-small, standard: my-big, fast: ''}\n")
     code, out = _tool("config", "--user", str(f), "--cwd", str(tmp_path))
     assert code == 1
+
+
+def test_versions_agree_and_changelog_names_the_current_one():
+    version = json.loads((ROOT / "plugin.json").read_text())["version"]
+    py = re.search(r'^version = "([^"]+)"', (ROOT / "pyproject.toml").read_text(), re.M).group(1)
+    assert py == version
+    first = re.search(r"^## (\S+)", (ROOT / "CHANGELOG.md").read_text(), re.M).group(1)
+    assert first == version, "add a CHANGELOG.md entry for the new version"
+    market = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
+    assert market["plugins"][0]["version"] == version

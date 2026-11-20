@@ -92,7 +92,6 @@ paths you do not want to share).
 - **A Notion account** with the Notion connector (or MCP server) in your tool.
   Matriarch creates its pages there. To work offline, choose the `files`
   backend in your settings instead.
-- **Access to this repository** if it is private: ask the owner to add you.
 
 ## Install
 
@@ -251,3 +250,10 @@ alternatives considered are in [`docs/design.md`](docs/design.md).
 
 Apache-2.0. Includes material adapted from the Elephant-Goldfish Model,
 Copyright 2026 Google LLC; see [`NOTICE`](NOTICE). Not affiliated with Google.
+
+## Contributing
+
+Issues and pull requests are welcome. Read [`CONTRIBUTING.md`](CONTRIBUTING.md)
+first; every change raises the version and is listed in
+[`CHANGELOG.md`](CHANGELOG.md). Report security problems privately
+([`SECURITY.md`](SECURITY.md)).

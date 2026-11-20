@@ -96,7 +96,8 @@ def manifests() -> dict[str, str]:
     claude_market = {
         "name": base["name"],
         "owner": base["author"],
-        "plugins": [{"name": base["name"], "source": "./", "description": base["description"]}],
+        "plugins": [{"name": base["name"], "source": "./", "description": base["description"],
+                     "version": base["version"]}],
     }
     codex = {
         "name": base["name"],

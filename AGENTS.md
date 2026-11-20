@@ -21,3 +21,8 @@ Rules for anyone (human or agent) changing this repository.
 6. **Plain English** in every file: short sentences, no promotional adjectives.
 7. Before committing: `python3 scripts/build.py --check` and `python3 -m pytest`.
    Design changes go to `docs/design.md` first.
+8. **Every change is a new commit with a new version.** Never amend or force-push
+   `main`. Raise the version in `plugin.json` and `pyproject.toml` (patch for
+   fixes, minor for new behavior, major for breaking changes) and add a
+   `CHANGELOG.md` entry; installed copies update only when the version changes.
+   Changes reach `main` through a reviewed pull request (`CONTRIBUTING.md`).

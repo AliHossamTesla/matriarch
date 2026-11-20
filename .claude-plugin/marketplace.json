@@ -7,7 +7,8 @@
     {
       "name": "matriarch",
       "source": "./",
-      "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares."
+      "description": "Elephant-Goldfish workflow with a persistent Notion memory that every session and tool shares.",
+      "version": "0.2.0"
     }
   ]
 }
