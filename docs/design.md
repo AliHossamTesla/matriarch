@@ -1,6 +1,6 @@
 # Matriarch: design
 
-- **Status:** v0.1 (in progress)
+- **Status:** v0.2 (first public release)
 - **Based on:** [Elephant-Goldfish Model](https://github.com/google/elephant-goldfish-model)
   (Google, Apache-2.0) at commit `72d06f5`.
 

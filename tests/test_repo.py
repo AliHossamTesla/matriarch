@@ -529,3 +529,10 @@ def test_versions_agree_and_changelog_names_the_current_one():
     assert first == version, "add a CHANGELOG.md entry for the new version"
     market = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
     assert market["plugins"][0]["version"] == version
+
+
+def test_model_rank_prefers_the_longest_matching_name(tmp_path):
+    f = tmp_path / "u.yaml"
+    f.write_text("models:\n  order: [gpt-5, gpt-5-mini]\n  tiers:\n    codex: {strong: gpt-5-mini, standard: gpt-5, fast: ''}\n")
+    code, out = _tool("config", "--user", str(f), "--cwd", str(tmp_path))
+    assert code == 1 and any("strong must be at least as strong" in e for e in out["errors"])
