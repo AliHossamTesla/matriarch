@@ -34,7 +34,8 @@ Either way it changes rows only within `memory.md` §4.
 
 ## 2. Memory checks
 
-Query each database and list:
+Query each database on its own, one query per database (`memory.md` §3), and
+list:
 
 1. **Unclosed sessions:** Work log rows In progress for more than
    `project.tidy.stale_session_days` days.

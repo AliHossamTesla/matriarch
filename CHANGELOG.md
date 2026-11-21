@@ -4,6 +4,17 @@ Every change to `main` adds an entry here and raises the version in
 `plugin.json` and `pyproject.toml` (see `CONTRIBUTING.md`). Installed copies
 update when the version changes.
 
+## 0.2.2 (2026-11-21)
+
+- Notion backend: query one data source at a time. Filter queries are the
+  default; SQL only for single-source questions; never SQL across databases,
+  which needs the Business plan. A failed `entitlement_required` query is
+  re-run as one filter query per data source (#5).
+- `memory.md` §3: new read rule "One database per query"; `status` and `tidy`
+  follow it.
+- `doctor`: new check "Queries" tries one filter query and, on Notion, one
+  two-database SQL query, and reports `info` when the plan does not allow it.
+
 ## 0.2.1 (2026-11-20)
 
 - `models.order`: a model now matches the longest name it contains, so

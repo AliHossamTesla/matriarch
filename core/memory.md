@@ -175,6 +175,9 @@ findings pages.
 - **Query, do not read everything.** Filter by Area, Status, Owner, ID or Ref,
   and open only the rows you need. Decisions you rely on: Status not Superseded
   or Withdrawn.
+- **One database per query.** A skill that needs several databases (`status`,
+  `tidy`) runs one query for each and joins the results itself. Some backends
+  refuse a query across databases (`backends/notion.md`).
 - **Status words carry meaning.** Decided: settled. Proposed: the person in
   `Decided by` still has to decide; do not build on it as settled. Assumption: a
   guess someone must confirm. Never hide `Waiting on` behind a status.
