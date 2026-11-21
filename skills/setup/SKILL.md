@@ -1,6 +1,6 @@
 ---
 name: setup
-description: Give a project its Matriarch memory - create or adopt the hub and its databases, register it, and write the project settings. Use once per project, or to connect an existing handoff page.
+description: Give a project its Matriarch memory - create or adopt the hub and its databases, register it, and on first use review the main settings with the owner in one short pass and write them. Use once per project, or to connect an existing handoff page.
 license: Apache-2.0
 disable-model-invocation: true
 ---
@@ -42,7 +42,7 @@ Session name: `<Project> · setup`.
 First ask one question: which stage the project is in, new, existing and small,
 or existing and large (`ROOT/core/start.md`). Once the hub exists, write it in
 the hub's Environment section (`Stage: …`). Use that stage's proposed settings
-when you go through the project settings, and end with its first steps.
+in the settings review (§2e), and end with its first steps.
 
 Then ask one question: create a new hub, or adopt an existing page (give its
 link)?
@@ -94,12 +94,7 @@ the two relations after both databases exist). Fill the registry row: Name,
 Hub, Repo, Spec folder, Build command, Status = Active, and `Data sources` as
 five lines `decisions=…`, `questions=…`, `tasks=…`, `log=…`, `library=…`.
 
-Then go through the project settings with the owner, one question per group,
-showing the default and asking only where it may differ: IDs (areas),
-confidentiality, the default review mode, tests (first, lock), commits (by, attribution, messages), merge, review panels and
-rounds. Write only the differences into the Settings block, and a Decisions row
-`Setting <key> = <value>` for each, in the Area that the setting is about, or
-the first Area when it applies to the whole project.
+Then run the settings review (§2e) for the project part.
 
 ### 2b. Adopt an existing hub
 
@@ -135,11 +130,10 @@ themselves, also on a project someone else set up.
 
 
 If `~/.matriarch/config.yaml` (or a `# Matriarch settings` block in chat-app
-instructions) does not exist yet, ask the owner for `user.language`,
-`user.explain` and, only if they do not want the Notion defaults, `memory.*`;
-then create the file in tools that can reach it, or give the
-block to paste. Personal settings never go on the hub: each team member has
-their own.
+instructions) does not exist yet, this is the owner's first setup: run the
+settings review (§2e) for the personal part, then create the file in tools that
+can reach it, or give the block to paste. Personal settings never go on the
+hub: each team member has their own.
 
 ### 2c-bis. This project's personal settings
 
@@ -156,6 +150,57 @@ Offer once to schedule the weekly tidy (the `tidy` skill, section "Scheduling
 it"): it keeps memory short and reports what needs the
 owner. Only with the owner's yes.
 
+### 2e. Settings review (first setup)
+
+One short pass over the settings that matter, so the owner starts with values
+that fit, not with defaults they never saw. Run it once:
+
+- **personal part** when the owner has no user settings yet (§2c);
+- **project part** when the hub is new (§2a), or adopted (§2b) after its Settings
+  were derived from the existing rules.
+
+Both parts at once when both apply. When setup runs again on a project that is
+already set up, skip this; settings change through `status` or the dashboard
+(`dashboard/settings.html`).
+
+1. **Detect before asking.** Fill what you can see, and mark each as detected:
+   - `user.language`: the language the owner writes in.
+   - `schedule.tidy.timezone`: the machine's time zone, where code runs.
+   - `models.tiers`: the tool you are in; keep its defaults unless the tool
+     names its models differently.
+   - `tests.lock`: `commit` if test files are tracked in git, `checksum` if
+     the repository ignores them.
+   - `merge`: `self-after-review` if the hub's People lists only the owner,
+     else `reviewer`. `merge_method`: what the repository allows, where `gh`
+     works.
+   - Everything else: the value the stage proposes (`ROOT/core/start.md`), else
+     the default.
+2. **Show one table** of about ten rows, only these keys (the part that
+   applies):
+
+   | Part | Keys |
+   | --- | --- |
+   | personal | `user.language`, `user.explain`, `memory.central.backend`, `memory.personal.backend`, `schedule.tidy.when` (with `reset` when `before_reset`) |
+   | project | `confidentiality.level`, `review.mode`, `tests.first` and `tests.lock`, `commits.by` and `commits.attribution`, `merge` and `merge_method` |
+
+   Columns: `Setting | Proposed | Why` (the why in a few words: "default",
+   "detected: tests ignored by git", "large codebase"). Say once that every
+   other key keeps its default and can be changed later.
+3. **Ask one question:** keep all, or say what to change, in plain words. If
+   `schedule.tidy.when` is `before_reset` and `reset` is empty, ask for the
+   reset time in the same question (or propose `weekly`).
+4. **Apply the answer.** Turn each change into its key; ask only when a change
+   is unclear. Validate with
+   `python3 ROOT/core/tools/matriarch.py config --user <file> --project <file>`
+   where code runs (by hand against `ROOT/settings/schema.json` otherwise). If a
+   change breaks an invariant, say which and propose the nearest valid value;
+   never loosen an invariant (`ROOT/core/settings.md` §0).
+5. **Write only the differences from the defaults:** personal keys to the user
+   settings (§2c), project keys to the hub's Settings block with a Decisions row
+   `Setting <key> = <value>` for each, in the Area the setting is about, or the
+   first Area when it applies to the whole project. End with one line: the
+   settings that now differ from the defaults.
+
 ## 3. Check and finish
 
 1. Read back the registry row; fetch each data source to prove access and check
@@ -164,7 +209,8 @@ owner. Only with the owner's yes.
    where code runs (by hand against `ROOT/settings/schema.json` otherwise), and fix
    every error and broken invariant with the owner before finishing.
 2. Add a Work log row: `Setup — Matriarch memory`, Type = Setup, Status = Done,
-   Summary = what was created, mapped and set.
+   Summary = what was created, mapped and set, and the settings that differ from
+   the defaults.
 3. Tell the owner in 3 lines: where the hub is, what was created or mapped, and
    the next command from the stage's first steps (`ROOT/core/start.md`).
    For a team, remind the owner to share the `Matriarch` page (registry and
