@@ -21,11 +21,27 @@ connector or MCP server (`../memory.md` §6).
 | `find_registry` | search for a database with that exact title; if several, ask the owner |
 | `read_page` | fetch the page by URL or ID |
 | `schema` | fetch the data source (`collection://…`) once per session; use its exact property names and select options |
-| `query` | query the data source with filters on properties (or SQL where the plan allows it); open only the rows you need |
+| `query` | query **one** data source with filters on its properties; open only the rows you need. See *Queries and plans* below |
 | `create_row` | create a page in the data source with the properties; the body is page content |
 | `update_row` | update the page's properties; never rewrite another session's text |
 | `child_page` | create a page whose parent is the row's page |
 | `edit_page` | fetch the page, replace only the target section, write it back; re-fetch right before writing |
+
+## Queries and plans
+
+What the Notion tools allow depends on the workspace plan:
+
+- **Filter queries** on one data source work on every plan. Use them by default.
+- **SQL on one data source** works on every plan, but below the Business plan
+  each SQL query counts against a limit shared by the whole workspace. Use SQL
+  only when a filter cannot ask the question (for example a count or a group).
+- **SQL across two or more data sources** needs the Business plan or higher.
+  Below it the call fails with `This tool requires a Business plan or higher`
+  (`entitlement_required`). Never rely on it: query each data source on its own
+  and join the results in the session.
+
+If a query fails with `entitlement_required`, do not retry it. Run the same
+question as one filter query per data source and go on.
 
 ## Notes
 

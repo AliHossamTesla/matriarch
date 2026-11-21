@@ -15,7 +15,7 @@ Read `ROOT/core/memory.md`, `ROOT/core/settings.md` and `ROOT/core/voice.md`
 now, and `ROOT/core/backends/<name>.md` for each backend in use.
 
 **Read-only.** Doctor writes no memory rows, no settings and no Work log row.
-The only file it writes is one temporary copy of the hub settings (§2.6),
+The only file it writes is one temporary copy of the hub settings (§2.7),
 outside the repository, deleted after. It reports and says how to fix.
 
 Session name: `<Project or tool> · doctor`.
@@ -54,14 +54,20 @@ Run each, stop the section at the first `fail` that makes the rest impossible:
    properties, wrong types and missing select options (for example the Work log
    Status option `Archived`, the Tasks properties `Mode` and `Progress`). Missing ones are `warn`
    for adopted hubs and `fail` for hubs made by `setup`.
-6. **Hub settings:** save the Settings block to a temporary file outside the
+6. **Queries:** run one filter query on the Work log that returns at most one
+   row. It must work (`fail` if not). Then, for the Notion backend only, try one
+   small SQL query that names two of the databases (read-only, at most one
+   row). If it fails with `entitlement_required`, report `info: cross-database
+   SQL not available on this plan; sessions query one database at a time`. Any
+   other error is `warn`.
+7. **Hub settings:** save the Settings block to a temporary file outside the
    repository (the only file doctor writes; delete it after), then run
    `matriarch.py config --user <your user settings> --project <that file>`.
    It must pass.
-7. **Personal memory** (unless `none`): opens by `memory.personal.url` (Notion)
+8. **Personal memory** (unless `none`): opens by `memory.personal.url` (Notion)
    or path (`files`); has the `Personal` database. Never search for it by
    title.
-8. **Weekly tidy:** the hub's Environment has a `Tidy schedule:` line, or
+9. **Weekly tidy:** the hub's Environment has a `Tidy schedule:` line, or
    `schedule.tidy.when` is `off`.
 
 ## 3. Report

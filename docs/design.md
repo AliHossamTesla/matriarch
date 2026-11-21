@@ -107,6 +107,8 @@ candidates for later backends.
 Key rules:
 
 - **Query, do not read everything.** Filter by Area, Status, Owner or ID.
+  Query one database at a time; some backends (Notion below the Business plan)
+  refuse a query that spans several databases.
 - **Status words matter:** Decided, Proposed (the named person still decides),
   Assumption, Superseded, Withdrawn.
 - **History stays.** A changed decision: the old row becomes Superseded and a

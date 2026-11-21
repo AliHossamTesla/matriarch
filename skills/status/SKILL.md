@@ -21,7 +21,7 @@ It is the only session that edits the hub's **Where we are**, **Rules** and
 ## 1. Load
 
 `session.md` §1–3. Name: `<Project> · status · <topic>`, Type = Planning,
-Ref = `STATUS`. Then query:
+Ref = `STATUS`. Then query, one database per query (`memory.md` §3):
 
 - **Tasks** with Status in (In progress, Blocked, In review, Ready);
 - **Open questions** with Status = Open, sorted by Needed by;
