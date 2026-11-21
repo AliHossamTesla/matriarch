@@ -75,7 +75,9 @@ In claude.ai, where skills have no namespace, they are named `matriarch-plan`,
 3. In the repository you want to work on, run `matriarch:doctor`. Fix what it
    reports.
 4. Run `matriarch:setup` once for the project. It creates the project's memory
-   in Notion (or adopts a page you already have) and asks for the settings.
+   in Notion (or adopts a page you already have), then shows the main settings
+   in one short table with what it proposes and why, and adjusts them to your
+   answer.
 5. Run `matriarch:status` to see where things stand, then `matriarch:plan` with
    a small first task.
 

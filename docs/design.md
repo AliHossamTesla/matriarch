@@ -158,7 +158,7 @@ Two kinds of session do the building, and they never mix: **plan** thinks and
 
 | Skill | Session | Does |
 | --- | --- | --- |
-| `setup` | once per project | create or adopt a hub, register it, set project settings |
+| `setup` | once per project | create or adopt a hub, register it; on first use, one quick review of the settings that matter, then write them |
 | `status` | the main planning chat | where we are, order the work, keep the hub current, hand off |
 | `plan` | one task, from idea to PR | shape the idea, close every open point, spec, sub-tasks with implementer prompts, review, then check each sub-task and the whole task |
 | `exec` | one sub-task, in another chat | follow the prompt: tests (Part A), then code (Part B); report with a status word |

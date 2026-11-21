@@ -6,7 +6,8 @@ To choose settings, the dashboard (`dashboard/settings.html`) shows each one,
 checks them and exports the files.
 
 Three starting points need different first steps. `setup` asks which one
-applies, proposes the settings below, and then follows the matching section.
+applies, shows the settings below in one short review with the owner, adjusts
+them, and then follows the matching section.
 After that, every project runs the same daily loop (§4).
 
 | Stage | Signs |
